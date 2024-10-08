@@ -1,10 +1,11 @@
 package com.example.backend_timetable.Service;
 
 import com.example.backend_timetable.DTO.RoomDTO;
-import com.example.backend_timetable.Entity.Room;
-import com.example.backend_timetable.Entity.Session;
 import com.example.backend_timetable.Repository.RoomRepository;
 import com.example.backend_timetable.Repository.SessionRepository;
+import com.example.backend_timetable.collection.Room;
+import com.example.backend_timetable.collection.Session;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

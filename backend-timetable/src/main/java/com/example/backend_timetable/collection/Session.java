@@ -1,4 +1,4 @@
-package com.example.backend_timetable.Entity;
+package com.example.backend_timetable.collection;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
