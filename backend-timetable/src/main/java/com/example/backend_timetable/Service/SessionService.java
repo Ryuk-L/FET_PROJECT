@@ -39,6 +39,25 @@ public class SessionService {
         return new ResponseEntity<>(session, HttpStatus.CREATED);
     }
 
+    public ResponseEntity<SessionDTO> getSessionWithoutLists(String sessionId) {
+        Optional<Session> sessionOptional = sessionRepository.findById(sessionId);
+        if (!sessionOptional.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        
+        Session session = sessionOptional.get();
+        SessionDTO sessionDTO = new SessionDTO();
+        sessionDTO.setYear(session.getYear());
+        sessionDTO.setUniversityName(session.getUniversityName());
+        sessionDTO.setTimeBreakStart(session.getTimeBreakStart());
+        sessionDTO.setTimeBreakEnd(session.getTimeBreakEnd());
+        sessionDTO.setTimeDayStart(session.getTimeDayStart());
+        sessionDTO.setTimeDayEnd(session.getTimeDayEnd());
+        sessionDTO.setActiveDays(session.getActiveDays()); 
+    
+        return new ResponseEntity<>(sessionDTO, HttpStatus.OK);
+    }
+
     // public Session updateTimeBreakStart(String sessionId, String timeBreakStart) {
     //    Optional<Session> optionalSession = sessionRepository.findById(sessionId);
     //     if (optionalSession.isPresent()){
@@ -136,6 +155,9 @@ public ResponseEntity<String> updateActiveDays(
     } else {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
     }
+
+
+   
 }
 
 

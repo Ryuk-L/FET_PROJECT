@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -18,12 +18,14 @@ public class Session {
     private String sessionId;
     private String year;
     private String universityName;
-    private List<Room> rooms;
+    private List<Room> rooms=new ArrayList<>();
     private String timeBreakStart;
     private String timeBreakEnd;
     private String timeDayStart;
     private String timeDayEnd;
     private List<String> activeDays;
+    private List<Subjects> subjects = new ArrayList<>(); 
+    private List<Department> department = new ArrayList<>();
 
 
 }

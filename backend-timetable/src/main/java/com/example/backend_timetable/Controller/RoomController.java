@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/session")
+@RequestMapping("/admin/session")
 public class RoomController {
 
     @Autowired

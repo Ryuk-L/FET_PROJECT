@@ -31,6 +31,12 @@ public class SessionController {
     return sessionService.createSession(sessionDTO);
   }
 
+  // get session by ID
+  @GetMapping("/{sessionId}")
+  public ResponseEntity<SessionDTO> getSessionById(@PathVariable String sessionId) {
+      return sessionService.getSessionWithoutLists(sessionId);
+  }
+
    // update session
    @PutMapping("/{sessionId}")
    public ResponseEntity<String> updateSession(@PathVariable String sessionId,@RequestBody SessionRequest request) {
