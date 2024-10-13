@@ -1,6 +1,6 @@
 package com.example.backend_timetable.collection;
 
-import java.util.List;
+
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -18,8 +18,5 @@ public class Group {
     private String groupId;
     private String groupName;
     private int  numberGroups;
-
-
-
-    
+    private Program program;
 }
