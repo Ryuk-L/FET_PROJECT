@@ -18,12 +18,12 @@ public class Session {
     private String sessionId;
     private String year;
     private String universityName;
-    private List<Room> rooms=new ArrayList<>();
     private String timeBreakStart;
     private String timeBreakEnd;
     private String timeDayStart;
     private String timeDayEnd;
     private List<String> activeDays;
+    private List<Room> rooms=new ArrayList<>();
     private List<Subjects> subjects = new ArrayList<>(); 
     private List<Department> department = new ArrayList<>();
 
