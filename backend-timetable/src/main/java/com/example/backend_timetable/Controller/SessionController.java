@@ -30,6 +30,11 @@ public class SessionController {
   public ResponseEntity<Session> createSession(@RequestBody SessionDTO sessionDTO) {
     return sessionService.createSession(sessionDTO);
   }
+  // delete session
+  @DeleteMapping("{sessionId}")
+    public ResponseEntity<String> deleteSession(@PathVariable String sessionId) {
+        return sessionService.deleteSessionById(sessionId);
+    }
 
   // get session by ID
   @GetMapping("/{sessionId}")

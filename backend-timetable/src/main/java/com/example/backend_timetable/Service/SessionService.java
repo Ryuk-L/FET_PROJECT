@@ -17,6 +17,7 @@ import com.example.backend_timetable.DTO.SessionDTO;
 import com.example.backend_timetable.DTO.SessionRequest;
 import com.example.backend_timetable.DTO.UniversityNameRequest;
 import com.example.backend_timetable.Repository.SessionRepository;
+import com.example.backend_timetable.collection.Room;
 import com.example.backend_timetable.collection.Session;
 
 @Service
@@ -57,6 +58,18 @@ public class SessionService {
     
         return new ResponseEntity<>(sessionDTO, HttpStatus.OK);
     }
+
+
+    public ResponseEntity<String> deleteSessionById(String sessionId) {
+        if (!sessionRepository.existsById(sessionId)) {
+            return new ResponseEntity<>("Session not found", HttpStatus.NOT_FOUND);
+        }
+        sessionRepository.deleteById(sessionId);
+        return new ResponseEntity<>("Session deleted successfully", HttpStatus.OK);
+    }
+
+
+
 
     // public Session updateTimeBreakStart(String sessionId, String timeBreakStart) {
     //    Optional<Session> optionalSession = sessionRepository.findById(sessionId);
@@ -155,6 +168,9 @@ public ResponseEntity<String> updateActiveDays(
     } else {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
     }
+
+
+    
 
 
    
