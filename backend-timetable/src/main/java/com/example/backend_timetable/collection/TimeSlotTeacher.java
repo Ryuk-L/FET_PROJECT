@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TimeSlotTeacher {
-    private String day;          // e.g., Monday, Tuesday
-    private String startTime;    // e.g., "08:00"
-    private String endTime;      // e.g., "10:00"
+    private String day;         
+    private String startTime;    
+    private String endTime;      
 }

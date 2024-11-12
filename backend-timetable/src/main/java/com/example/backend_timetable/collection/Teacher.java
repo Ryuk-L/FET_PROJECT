@@ -18,7 +18,10 @@ import java.util.List;
 public class Teacher {
     @Id
     private String id;
+    private String email;
+    private String cin;
     private String teacherName;
+    private boolean isValide=false;
     private List<Subjects> subjectsCanTeach;  
     private List<TimeSlotTeacher> timeSlots;        
 }

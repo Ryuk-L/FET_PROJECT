@@ -26,6 +26,7 @@ public class Session {
     private List<Room> rooms=new ArrayList<>();
     private List<Subjects> subjects = new ArrayList<>(); 
     private List<Department> department = new ArrayList<>();
+    private List<Teacher> teachers = new ArrayList<>();
 
 
 }
