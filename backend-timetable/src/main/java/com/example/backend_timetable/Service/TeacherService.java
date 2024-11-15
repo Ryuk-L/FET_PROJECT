@@ -8,11 +8,16 @@ import org.springframework.web.multipart.MultipartFile;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.example.backend_timetable.DTO.AuthRequest;
+import com.example.backend_timetable.DTO.AuthResponse;
 import com.example.backend_timetable.Repository.SessionRepository;
+import com.example.backend_timetable.collection.Role;
 import com.example.backend_timetable.collection.Session;
 import com.example.backend_timetable.collection.Subjects;
 import com.example.backend_timetable.collection.Teacher;
 import com.example.backend_timetable.collection.TimeSlotTeacher;
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.Iterator;
 import java.util.UUID;
 
@@ -30,23 +35,48 @@ public class TeacherService {
 
     @Autowired
     private SessionRepository sessionRepository;
+    @Autowired
+    private FirebaseService firebaseAuthService;
+    @Autowired
+    private RoleService roleService;
 
     public ResponseEntity<String> addTeacherToSession(String sessionId, Teacher data) {
         Optional<Session> sessionOptional = sessionRepository.findById(sessionId);
         if (!sessionOptional.isPresent()) {
             return new ResponseEntity<>("Session not found", HttpStatus.NOT_FOUND);
         }
+    
+        AuthRequest userFirebase = new AuthRequest();
+        userFirebase.setEmail(data.getEmail());
+        userFirebase.setPassword(data.getCin());
+
+        AuthResponse authResponse = firebaseAuthService.createUser(userFirebase);
+    
+        if (authResponse.isError()) {
+            return new ResponseEntity<>("Error registering user in Firebase: " + authResponse.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    
+      
+        String firebaseUid = authResponse.getUid();
+    
+        
         Teacher teacher = new Teacher();
-        teacher.setId(UUID.randomUUID().toString());
+        teacher.setId(firebaseUid); 
         teacher.setTeacherName(data.getTeacherName());
-        teacher.setSubjectsCanTeach(data.getSubjectsCanTeach());
-        teacher.setTimeSlots(data.getTimeSlots());
         teacher.setCin(data.getCin());
         teacher.setEmail(data.getEmail());
+    
+       
+        Role roleUser = new Role();
+        roleUser.setIdUser(firebaseUid);
+        roleUser.setRoleUser("Teacher");
+        roleService.addRole(roleUser);
+    
+       
         Session session = sessionOptional.get();
         session.getTeachers().add(teacher);
         sessionRepository.save(session);
-
+    
         return new ResponseEntity<>("Teacher added to session successfully", HttpStatus.OK);
     }
 
@@ -95,56 +125,96 @@ public class TeacherService {
 
     // Method to delete a teacher from a session
     public ResponseEntity<String> deleteTeacherFromSession(String sessionId, String teacherId) {
+        // Step 1: Check if the session exists
         Optional<Session> sessionOptional = sessionRepository.findById(sessionId);
         if (!sessionOptional.isPresent()) {
             return new ResponseEntity<>("Session not found", HttpStatus.NOT_FOUND);
         }
+    
         Session session = sessionOptional.get();
-        boolean removed = session.getTeachers().removeIf(teacher -> teacher.getId().equals(teacherId));
+    
+        // Step 2: Remove the teacher from the session if teacher ID is not null
+        boolean removed = session.getTeachers().removeIf(teacher -> teacher.getId() != null && teacher.getId().equals(teacherId));
         if (!removed) {
-            return new ResponseEntity<>("Teacher not found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Teacher not found in session", HttpStatus.NOT_FOUND);
         }
+    
+        // Step 3: Delete the teacher's role
+        try {
+            roleService.deleteRoleById(teacherId);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error deleting teacher's role: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    
+        // Step 4: Delete the teacher from Firebase
+        try {
+            FirebaseAuth.getInstance().deleteUser(teacherId);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error deleting teacher from Firebase: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    
+        // Step 5: Save the updated session
         sessionRepository.save(session);
-        return new ResponseEntity<>("Teacher deleted successfully", HttpStatus.OK);
+    
+        return new ResponseEntity<>("Teacher deleted successfully from session, role, and Firebase", HttpStatus.OK);
     }
+    
 
 
+
+    
+    
     public ResponseEntity<String> addTeachersFromExcel(String sessionId, MultipartFile file) {
         try {
             InputStream inputStream = file.getInputStream();
             Workbook workbook = new XSSFWorkbook(inputStream);
-        
             Sheet sheet = workbook.getSheetAt(0);
             Iterator<Row> rows = sheet.iterator();
-        
+    
             if (rows.hasNext()) {
-                rows.next();
+                rows.next();  
             }
+    
             while (rows.hasNext()) {
                 Row currentRow = rows.next();
-        
-                Cell nameCell = currentRow.getCell(0);
-                String teacherName = getStringCellValue(nameCell);
-        
-                Cell subjectsCell = currentRow.getCell(1);
-                String subjects = getStringCellValue(subjectsCell);
-        
-                Cell timeSlotCell = currentRow.getCell(2);
-                String timeSlots = getStringCellValue(timeSlotCell);
-        
-                Cell emailCell = currentRow.getCell(3);
-                String email = getStringCellValue(emailCell);
-        
-                Cell cinCell = currentRow.getCell(4);
-                String cin = getStringCellValue(cinCell);
-        
+    
+               
+                String teacherName = getStringCellValue(currentRow.getCell(0));
+                String email = getStringCellValue(currentRow.getCell(1));
+                String cin = getStringCellValue(currentRow.getCell(2));
+    
+            
+                AuthRequest userFirebase = new AuthRequest();
+                userFirebase.setEmail(email);
+                userFirebase.setPassword(cin);
+                AuthResponse authResponse = firebaseAuthService.createUser(userFirebase);
+    
+                
+                if (authResponse.getMessage() != null && authResponse.getMessage().startsWith("Error")) {
+                    return new ResponseEntity<>("Error registering user in Firebase: " + authResponse.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+    
+       
                 Teacher teacher = new Teacher();
+                teacher.setId(authResponse.getUid()); 
                 teacher.setCin(cin);
                 teacher.setTeacherName(teacherName);
                 teacher.setEmail(email);
-        
-                teacher.setSubjectsCanTeach(convertStringSubjectToList(subjects));
-                teacher.setTimeSlots(convertStringToTimeSlots(timeSlots));
+    
+              
+                Role roleUser = new Role();
+                roleUser.setIdUser(authResponse.getUid());
+                roleUser.setRoleUser("Teacher");
+                roleService.addRole(roleUser);
+    
+               
+                System.out.println("\n\n-----------------------------------------");
+                System.out.println("cin: " + cin);
+                System.out.println("email: " + email);
+                System.out.println("teacher name: " + teacherName);
+                System.out.println("-----------------------------------------\n\n");
+    
+               
                 Optional<Session> sessionOptional = sessionRepository.findById(sessionId);
                 if (sessionOptional.isPresent()) {
                     Session session = sessionOptional.get();
@@ -152,14 +222,17 @@ public class TeacherService {
                     sessionRepository.save(session);
                 }
             }
+    
             workbook.close();
             return new ResponseEntity<>("Teachers added from Excel successfully", HttpStatus.OK);
-        
+    
         } catch (IOException e) {
             e.printStackTrace();
             return new ResponseEntity<>("Failed to read Excel file", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
+    
     private List<Subjects> convertStringSubjectToList(String subjects) {
         if (subjects == null || subjects.isEmpty()) {
             return new ArrayList<>();

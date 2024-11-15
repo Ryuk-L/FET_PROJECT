@@ -35,4 +35,14 @@ public class RoleService {
         return roleRepository.findByIdUser(idUser)
                 .orElseThrow(() -> new RuntimeException("Role with idUser: " + idUser + " not found."));
     }
+
+
+    public void deleteRoleById(String idUser) {
+        Role role = roleRepository.findById(idUser).orElse(null);
+        if (role != null) {
+            roleRepository.delete(role);
+        } else {
+            throw new IllegalArgumentException("Role not found for user ID: " + idUser);
+        }
+    }
 }
