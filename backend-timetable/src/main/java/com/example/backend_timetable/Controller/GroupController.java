@@ -3,6 +3,7 @@ package com.example.backend_timetable.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.backend_timetable.Service.GroupService;
 import com.example.backend_timetable.collection.Group;
 import com.example.backend_timetable.collection.Session;
-
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/admin/session")
 public class GroupController {

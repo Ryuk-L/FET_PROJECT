@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.backend_timetable.Service.TeacherService;
 import com.example.backend_timetable.collection.Teacher;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/admin/session")
 public class TeacherController {
@@ -17,6 +18,7 @@ public class TeacherController {
     @Autowired
     private TeacherService teacherService;
 
+    //add Teacher in a session
     @PostMapping("/{sessionId}/teachers")
     public ResponseEntity<String> addTeacherToSession(
             @PathVariable String sessionId, 

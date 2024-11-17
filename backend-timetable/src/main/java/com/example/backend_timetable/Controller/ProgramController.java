@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import com.example.backend_timetable.Service.ProgramService;
 import com.example.backend_timetable.collection.Program;
 
+
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/admin/session")
 public class ProgramController {

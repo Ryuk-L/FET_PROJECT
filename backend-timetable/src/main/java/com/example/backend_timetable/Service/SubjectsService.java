@@ -38,6 +38,7 @@ public class SubjectsService {
         subject.setId(UUID.randomUUID().toString());
         subject.setSubjectName(subjectDTO.getSubjectName());
         subject.setDuration(subjectDTO.getDuration());
+        subject.setType(subjectDTO.getType());
         session.getSubjects().add(subject);
         sessionRepository.save(session);
         return new ResponseEntity<>("Subject added to session", HttpStatus.OK);
@@ -55,6 +56,7 @@ public class SubjectsService {
             if (subject.getId().equals(subjectId)) {
                 subject.setSubjectName(subjectDTO.getSubjectName());
                 subject.setDuration(subjectDTO.getDuration());
+                subject.setType(subjectDTO.getType());
                 sessionRepository.save(session);
                 return new ResponseEntity<>("Subject updated", HttpStatus.OK);
             }

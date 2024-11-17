@@ -32,6 +32,7 @@ public class RoomService {
         Room room = new Room();
         room.setNameRoom(roomDTO.getNameRoom());
         room.setCapacity(roomDTO.getCapacity());
+        room.setType(roomDTO.getType());
         room.setRoomId(UUID.randomUUID().toString());
         session.getRooms().add(room);
         sessionRepository.save(session);
@@ -89,6 +90,7 @@ public class RoomService {
             if (room.getRoomId().equals(roomId)) {
                 room.setNameRoom(roomDTO.getNameRoom());
                 room.setCapacity(roomDTO.getCapacity());
+                room.setType(roomDTO.getType());
                 sessionRepository.save(session);
                 return new ResponseEntity<>("Room updated successfully", HttpStatus.OK);
             }

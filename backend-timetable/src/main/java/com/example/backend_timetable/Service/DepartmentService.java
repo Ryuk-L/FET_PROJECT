@@ -5,10 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 import java.util.Optional;
 import com.example.backend_timetable.Repository.SessionRepository;
 import com.example.backend_timetable.collection.Department;
 import com.example.backend_timetable.collection.Session;
+
+
 
 @Service
 public class DepartmentService {

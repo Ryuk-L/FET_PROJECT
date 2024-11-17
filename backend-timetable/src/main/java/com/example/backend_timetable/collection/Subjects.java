@@ -15,5 +15,6 @@ public class Subjects {
     @Id
     private String id;
     private String subjectName;
-    private String duration;    
+    private String duration; 
+    private String type;
 }
