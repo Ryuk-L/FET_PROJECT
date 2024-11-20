@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 @AllArgsConstructor
 @CrossOrigin(origins = "*")
 @Document(collection = "role")
+
 public class Role {
     @Id
     private String idUser;
