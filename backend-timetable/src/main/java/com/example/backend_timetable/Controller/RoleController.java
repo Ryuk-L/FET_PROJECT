@@ -7,10 +7,9 @@ import com.example.backend_timetable.collection.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-@CrossOrigin(origins = "*")
+
 @RestController
 @RequestMapping("/roles")
-
 @CrossOrigin(origins = "*")
 public class RoleController {
 
