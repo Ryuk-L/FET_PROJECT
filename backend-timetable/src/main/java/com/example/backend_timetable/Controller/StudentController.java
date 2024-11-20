@@ -6,6 +6,7 @@ import com.example.backend_timetable.collection.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/admin/session/{sessionId}/departments/{departmentId}/groups/{groupId}/students")
@@ -26,13 +27,13 @@ public class StudentController {
 
     // Update student details
     @PutMapping("/{studentId}")
-    public ResponseEntity<Session> updateStudent(
+    public ResponseEntity<String> updateStudent(
             @PathVariable String sessionId,
             @PathVariable String departmentId,
             @PathVariable String groupId,
             @PathVariable String studentId,
             @RequestBody Student updatedStudent) {
-        return ResponseEntity.ok(studentService.updateStudent(sessionId, departmentId, groupId, studentId, updatedStudent));
+                return studentService.updateStudent(sessionId, departmentId, groupId, studentId, updatedStudent);
     }
 
     // Get student details
@@ -52,16 +53,31 @@ public class StudentController {
 
     // Delete student from a group
     @DeleteMapping("/{studentId}")
-    public ResponseEntity<Session> deleteStudent(
+    public ResponseEntity<String> deleteStudent(
             @PathVariable String sessionId,
             @PathVariable String departmentId,
             @PathVariable String groupId,
             @PathVariable String studentId) {
         try {
-            Session session = studentService.deleteStudent(sessionId, departmentId, groupId, studentId);
-            return ResponseEntity.ok(session);
+            studentService.deleteStudent(sessionId, departmentId, groupId, studentId);
+            return ResponseEntity.ok("Student with ID " + studentId + " has been successfully deleted.");
         } catch (RuntimeException e) {
-            return ResponseEntity.status(404).body(null);
+            return ResponseEntity.status(404).body("Error: Student with ID " + studentId + " could not be found or deleted.");
+        }
+    }
+
+
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadStudents(
+            @PathVariable String sessionId,
+            @PathVariable String departmentId,
+            @PathVariable String groupId,
+            @RequestParam("file") MultipartFile file) {
+        try {
+            studentService.addStudentsFromExcel(file, sessionId, departmentId, groupId);
+            return ResponseEntity.ok("Students added successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error: " + e.getMessage());
         }
     }
 }

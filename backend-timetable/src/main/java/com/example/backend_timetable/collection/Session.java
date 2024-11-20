@@ -18,7 +18,6 @@ public class Session {
     @Id
     private String sessionId;
     private String year;
-    @Indexed(unique = true)
     private String universityName;
     private String timeBreakStart;
     private String timeBreakEnd;

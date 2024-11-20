@@ -12,7 +12,6 @@ import org.springframework.data.mongodb.core.index.Indexed;
 public class Room {
     @Id
     private String roomId;
-    @Indexed(unique = true)
     private String nameRoom;
     private int capacity;
     private String type;

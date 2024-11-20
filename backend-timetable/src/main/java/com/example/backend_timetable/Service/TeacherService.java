@@ -108,9 +108,8 @@ public class TeacherService {
 
  
 
-    // Method to delete a teacher from a session
+    
 public ResponseEntity<String> deleteTeacherFromSession(String sessionId, String teacherId) {
-    // Step 1: Check if the session exists
     Optional<Session> sessionOptional = sessionRepository.findById(sessionId);
     if (!sessionOptional.isPresent()) {
         return new ResponseEntity<>("Session not found", HttpStatus.NOT_FOUND);
@@ -118,27 +117,23 @@ public ResponseEntity<String> deleteTeacherFromSession(String sessionId, String 
 
     Session session = sessionOptional.get();
 
-    // Step 2: Remove the teacher from the session
     boolean removed = session.getTeachers().removeIf(teacher -> teacher.getId().equals(teacherId));
     if (!removed) {
         return new ResponseEntity<>("Teacher not found in session", HttpStatus.NOT_FOUND);
     }
 
-    // Step 3: Delete the teacher's role
     try {
         roleService.deleteRoleById(teacherId);
     } catch (Exception e) {
         return new ResponseEntity<>("Error deleting teacher's role: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    // Step 4: Delete the teacher from Firebase
     try {
         FirebaseAuth.getInstance().deleteUser(teacherId);
     } catch (Exception e) {
         return new ResponseEntity<>("Error deleting teacher from Firebase: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    // Step 5: Save the updated session
     sessionRepository.save(session);
 
     return new ResponseEntity<>("Teacher deleted successfully from session, role, and Firebase", HttpStatus.OK);
