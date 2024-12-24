@@ -20,16 +20,24 @@ public class DepartmentService {
     @Autowired
     private SessionRepository sessionRepository;
 
-     public ResponseEntity<String> addDepartmentToSession(String sessionId, Department department) {
+    public ResponseEntity<String> addDepartmentToSession(String sessionId, Department department) {
         Optional<Session> sessionOptional = sessionRepository.findById(sessionId);
         if (!sessionOptional.isPresent()) {
             return new ResponseEntity<>("Session not found", HttpStatus.NOT_FOUND);
         }
         Session session = sessionOptional.get();
-        department.setDepartmentId(UUID.randomUUID().toString()); 
+        boolean departmentExists = session.getDepartment().stream()
+                                          .anyMatch(existingDept -> existingDept.getDepartmentName().equals(department.getDepartmentName()));
+        
+        if (departmentExists) {
+            return new ResponseEntity<>("Department name already exists in this session", HttpStatus.CONFLICT);
+        }
+
+        department.setDepartmentId(UUID.randomUUID().toString());
         department.setDepartmentName(department.getDepartmentName());
         session.getDepartment().add(department);
         sessionRepository.save(session);
+
         return new ResponseEntity<>("Department added successfully", HttpStatus.OK);
     }
 

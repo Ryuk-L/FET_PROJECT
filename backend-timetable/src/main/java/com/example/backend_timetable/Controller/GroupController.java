@@ -24,19 +24,13 @@ public class GroupController {
     private GroupService groupService;
 
     @PostMapping("/{sessionId}/departments/{departmentId}/groups")
-    public ResponseEntity<String> addGroupToDepartment(
-            @PathVariable String sessionId,
-            @PathVariable String departmentId,
-            @RequestBody Group groupData) {
-
-        Session updatedSession = groupService.addGroupToDepartmentInSession(sessionId, departmentId, groupData);
-        
-        if (updatedSession == null) {
-            return new ResponseEntity<>("Session or Department not found", HttpStatus.NOT_FOUND);
+    public ResponseEntity<String> addGroupToDepartmentInSession(
+        @PathVariable String sessionId,
+        @PathVariable String departmentId,
+        @RequestBody Group groupData) {
+    
+    return groupService.addGroupToDepartmentInSession(sessionId, departmentId, groupData);
         }
-
-        return new ResponseEntity<>("Group added to department", HttpStatus.OK);
-    }
 
 
     @PutMapping("/{sessionId}/departments/{departmentId}/groups/{groupId}")

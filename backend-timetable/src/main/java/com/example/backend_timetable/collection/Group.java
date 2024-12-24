@@ -3,6 +3,8 @@ package com.example.backend_timetable.collection;
 
 
 import org.springframework.data.annotation.Id;
+
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
@@ -19,6 +21,7 @@ import java.util.List;
 public class Group {
     @Id
     private String groupId;
+    @Indexed(unique = true)
     private String groupName;
     private int  numberGroups;
     private Program program;

@@ -27,7 +27,7 @@ public class SessionController {
 
   // create session
   @PostMapping
-  public ResponseEntity<Session> createSession(@RequestBody SessionDTO sessionDTO) {
+  public ResponseEntity<?> createSession(@RequestBody SessionDTO sessionDTO) {
     return sessionService.createSession(sessionDTO);
   }
   // delete session

@@ -18,18 +18,21 @@ public class FirebaseConfig {
 
     private static final Logger logger = Logger.getLogger(FirebaseConfig.class.getName());
 
-    private static final String SERVICE_ACCOUNT_JSON = "{\n" +
-            "  \"type\": \"service_account\",\n" +
-            "  \"project_id\": \"fetprojet\",\n" +
-            "  \"private_key_id\": \"18a6c6f624ab40e162cdf074151a0e301adb60f1\",\n" +
-            "  \"private_key\": \"-----BEGIN PRIVATE KEY-----\\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDlWTCW9ob2K7WM\\nAc+3FHY7hpxcufIKQxDRforrBPgKDJtw0yh8JVLweulH6NqkoQqwBtTVCT350bjt\\n1ySDPLnj/DW1aPLFA+kwPPOV8AqOzLg/E/q/t0hp3xLf0UgzAA3wVRtWCeJK/Yut\\nzwl6an/5y02prC2e/5c0Wom+ZxMh2pWseRQaAJpRlT3ygl9UkPEsP/qAxJ8/VDML\\nitmLIn9GwsTKWwpj9JqbU58e+vJpE9PGhi5s+GS34mJOw3LJ8EXSld+5pypF7W3S\\nx7BFpMFSkZgTTi8uINHjmw0VEjZtPZK8yKz1NHBPf2QZ9Q55OEx8Px93F8uG2G8J\\nfuttKJopAgMBAAECggEACZcLBnb4wfymJtxxB3BkOL06VtDCJ45yGrZyP91Jc18f\\nVU6JDfbgEtTq4gJBOTrQJ/fjKKTOKf7sXwqc2N1+TuOOCd/Bbf5JvwX/b/y1bk7u\\nYdnXpXJYJXAp2YDGZnaJPqxKXDTF2Pmk4G/Mr0kagJMRFGgSEMjSdWKXSaZE+Sh2\\nzbLARFixOo7RO2gC3x0LoGHBp0MAaxf/ZEqwaYzsMoWyqZQ/5s8987cuvNvJ+WNO\\njdJT0hC0vPc1BgePPYH10moW+TGq4okx2506nppAup4oBOwNTb+HSK3URUwWmX2i\\nQFFOUpE6uurGWSLapAita2FnCR/izEdUhOchA4z1EQKBgQD5aeTNmb5+LjudeD2a\\nKdlwFKeHIGssmLVxfyfz1pKXUIrOo4U/I/Y9B72RZBH6f3jJosS2y9f4WIlRoG27\\nT3iC6oYWQEHwZ59B12vGKKrkQ+NVhkXOhqolri9r8ynYU72+oI2JaSxKKjKzX5VM\\nTV1oTBzNfLMHBfO8ci3Wn8vOkQKBgQDrZ6Y5/0x16aMMsWi+wY81ApZhakK1Busg\\nYx+DI4XgJKg1jnqSvQIi3goPRIYT7tuD2eWJY4nXJQxwrkfFsep7lPyEtC1X1iWv\\nYVoAPuASkxODG2UY2J32ral6DHJJDMLSVAT9d7tg4VNwODlceRryAipum6/ZB0NT\\nUXAgi12OGQKBgH1i2g7uktC2h2vjzfxZu6FYENyi1J5n6xey2DACmFGPwSifFlam\\nypzl7kxQZaVsPhoIRSKsmdeVEvvBTkkTa79NDbnT9hJY1bxxAxJs0XTOGFSfmyp3\\nksQ8rER1y3ygpMxXxK/m+sgSLMj2bYUdg67yTKyVWx9Vw7HiKN80GG6xAoGAYA1R\\n2TZfh3lGi2ZUPAmUmmes3qDSCTWCeRuY/xReit/KNtglEXzHw1xgNGycXMPIlBsz\\nuoR/+OZoFg42wObgq35WLvupyL5bcB1D8Pe2zD1w570k2ieBBOdFUMSFWWM4l0Or\\nKZVSQqyONCrs1NuhcAAMOkeST/bTtMp0+wKCsPkCgYEA6lAUAhmZAjdNWYiv8C07\\nN+NvD8o7rfNLUbZS8gtam8paaSVJQbitjvTGrt4Vit5X3D/IzmYFHL5mLyS7XEav\\nEFFiOWooLaWFDP7a2M50tqsY5d6GVdkm1xUdTRUg5bXMRa+Fe+OMjJkPZ8xcAupK\\nidpe/SLbbTA9RkdsCFsqWQo=\n-----END PRIVATE KEY-----\\n\",\n" +
-            "  \"client_email\": \"firebase-adminsdk-sc3ua@fetprojet.iam.gserviceaccount.com\",\n" +
-            "  \"client_id\": \"118168736354118244774\",\n" +
-            "  \"auth_uri\": \"https://accounts.google.com/o/oauth2/auth\",\n" +
-            "  \"token_uri\": \"https://oauth2.googleapis.com/token\",\n" +
-            "  \"auth_provider_x509_cert_url\": \"https://www.googleapis.com/oauth2/v1/certs\",\n" +
-            "  \"client_x509_cert_url\": \"https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-sc3ua%40fetprojet.iam.gserviceaccount.com\",\n" +
-            "  \"universe_domain\": \"googleapis.com\"\n}";
+
+
+            private static final String SERVICE_ACCOUNT_JSON = "{\n" +
+        "  \"type\": \"service_account\",\n" +
+        "  \"project_id\": \"fetprojet\",\n" +
+        "  \"private_key_id\": \"a4ffd8f6eedb409bd2b1f06c22f34bcd4861c97d\",\n" +
+        "  \"private_key\": \"-----BEGIN PRIVATE KEY-----\\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCyOpPOnp3JtoC5\\nfK8RgwI+eexLLOWbERE01rdM7w+p5xCzpjWU+JaxL/Rm2pnWKJvUrDGonwEICDIb\\n0D4dQb7dOh6c86dgbGdf5P/hlFe40f95KpDTJhnBQTYwqnrFvcjU9uRhjCWGtplY\\nWyxoA2KgdvQPa2ZA4kz+TOLS26P1ABegmnOr4sVYXdfjr6+ZcbysdLrJ7/PJFLp3\\nNPB1WY80qkCXrFGu3tm7Xtw+AcF8bjF3JMVBKhKFEAQVvtsrPSQvVihHGv0iXgzj\\nA6Bri8DdH+46FCc8j318Lz9vZzD4lAoKkxAIBiLXo92hisY/bv9hGR8ijM2D54Yq\\n+ml+yzIpAgMBAAECggEABPPjbe9IHjYFRLebcSaiq37IMLHviCFvc3hGAWF2niI5\\ne2yHz6XKy44JbMmaqHIExoz/F5r3id7EbwkYjh0+GGKy6BSjQZGG8TS+tujgOSwT\\nZ9gQIeCiAECiKLRhaK5PRDpqJUXM4yie1pmOAIPw5oRNCu1RRZtO8sAgi3smsWUC\\ngihDwgmt2C0Je83URVbpfuomCD1LeL+lY1QW7yFQHfSbCG28XnWc3VmUbrw1i1U3\\nO65HwD2Ev/Rc8M3dE6WeJQcLJBvqwoJUEW2FkXPRQmALII6tpOI1t8xKMTXeqB64\\n3Od2rXMhAGGNztGoy120WpicTmhbhwFgsLF1s/O9SwKBgQDp1t88qecKO0qFuhrI\\nM7XQrHmOWHRbMU09Omwfk04O37eSqLzuDTvUeiMQaevAwBPeQOtYxqsaVIFb0xU3\\nj2ux2VIH+YYGrbxgrBxIJ1T3rsTonCKWmnoQeRzaLnrD2pSW44R282a9g8fXpxYt\\nF1upEbu9g1HSeWbMhQhpaC5d2wKBgQDDHozExrIE1s65YtHUg5RN9EUq161x7iR6\\n3/ENV/6gvf3/M3LBkxEoZwH1iIKTpes+HhdkZJN+deONaV7BgGc6oHHLGL48/CC8\\niAXfT23D+fNyDU1CEdVV3SP30gd1J4zXaFQ3EbKpIJ07jZbVmQXnwcUKm2l4qK4U\\nADduxosJSwKBgDBLJzmhIU00p5RstiFIxLD/He+vBwDacshFa5Ut1/4sZ/5LCRHk\\n+8lLHDjEl2LsiG3rXG+uQCIk975eHtCltyk4578r4mk4smIIyaKBNQQePR6JOH+A\\nEdubF8FbvhD68JslC/OBG2PidoBsSqEvZMfLGMnv+BMO7ZMpmm4ijQjnAoGBAIr+\\n0kzDNsGXvD/4E34OFbHKlxND/Tyx5q7ZpMBatPsRHUWVAuS+vXRInO6qRkqj4Yao\\nrQVJWIC3vlhYfbXeoKr07Ns/TxXmjfN/+p7v2EPJZREURLsSNSUrmZnKtqFQgVZZ\\n7dQk+V7d6uQnoxGaJsjIEnPR7jqT/x4kYVi6ewUtAoGBAMZ7YdkKrzq8he/IGiBy\\nArkM5T0uaIcRYqs23YkkDTNZfGqrBnuiYveeaWdkmvUbCZAf0HRo/Zx1M81ruh2F\\nrgeOJ4/YUIrZAm1E/WLWC0liu9r/pgV5qYyTgWigWgwPiUGggd20TeSZ6YJSQ2zc\\nKcLKPERGGe98eoJSZtk37Imm\\n-----END PRIVATE KEY-----\\n\",\n" +
+        "  \"client_email\": \"firebase-adminsdk-sc3ua@fetprojet.iam.gserviceaccount.com\",\n" +
+        "  \"client_id\": \"118168736354118244774\",\n" +
+        "  \"auth_uri\": \"https://accounts.google.com/o/oauth2/auth\",\n" +
+        "  \"token_uri\": \"https://oauth2.googleapis.com/token\",\n" +
+        "  \"auth_provider_x509_cert_url\": \"https://www.googleapis.com/oauth2/v1/certs\",\n" +
+        "  \"client_x509_cert_url\": \"https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-sc3ua%40fetprojet.iam.gserviceaccount.com\",\n" +
+        "  \"universe_domain\": \"googleapis.com\"\n}";
+
 
     @PostConstruct
     public void initialize() {

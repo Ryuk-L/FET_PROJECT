@@ -26,7 +26,12 @@ public class SessionService {
     @Autowired
     private SessionRepository sessionRepository;
 
-     public ResponseEntity<Session> createSession(@RequestBody SessionDTO sessionDTO) {
+    public ResponseEntity<?> createSession(@RequestBody SessionDTO sessionDTO) {
+        
+        Optional<Session> existingSession = sessionRepository.findByYearAndUniversityName(sessionDTO.getYear(), sessionDTO.getUniversityName());
+        if (existingSession.isPresent()) {
+            return new ResponseEntity<>("A session with the same year and university name already exists.", HttpStatus.CONFLICT);
+        }
         Session session = new Session();
         session.setYear(sessionDTO.getYear());
         session.setUniversityName(sessionDTO.getUniversityName());
@@ -39,6 +44,7 @@ public class SessionService {
         sessionRepository.save(session);
         return new ResponseEntity<>(session, HttpStatus.CREATED);
     }
+
 
     public ResponseEntity<SessionDTO> getSessionWithoutLists(String sessionId) {
         Optional<Session> sessionOptional = sessionRepository.findById(sessionId);

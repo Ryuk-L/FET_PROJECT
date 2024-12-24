@@ -21,37 +21,48 @@ public class GroupService {
     @Autowired
     private SessionRepository sessionRepository;
 
-    public Session addGroupToDepartmentInSession(String sessionId, String departmentId, Group data) {
+    public ResponseEntity<String> addGroupToDepartmentInSession(String sessionId, String departmentId, Group data) {
 
+        // Check if session exists
         Optional<Session> sessionOptional = sessionRepository.findById(sessionId);
         if (!sessionOptional.isPresent()) {
-
-            return null;
+            return new ResponseEntity<>("Session not found", HttpStatus.NOT_FOUND);
         }
         Session session = sessionOptional.get();
-
-
+    
+        // Check if department exists within the session
         Optional<Department> departmentOptional = session.getDepartment().stream()
             .filter(dept -> dept.getDepartmentId().equals(departmentId))
             .findFirst();
         
         if (!departmentOptional.isPresent()) {
-   
-            return null;
+            return new ResponseEntity<>("Department not found in this session", HttpStatus.NOT_FOUND);
         }
         Department department = departmentOptional.get();
-
-      
+    
+        // Check if group name already exists in the department
+        boolean groupExists = department.getGroups().stream()
+            .anyMatch(existingGroup -> existingGroup.getGroupName().equals(data.getGroupName()));
+        
+        if (groupExists) {
+            return new ResponseEntity<>("Group name already exists in this department", HttpStatus.CONFLICT);
+        }
+    
+        // Create and set group properties
         Group group = new Group();
         group.setGroupId(UUID.randomUUID().toString());
         group.setGroupName(data.getGroupName());     
         group.setNumberGroups(data.getNumberGroups());
+    
+        // Add group to department
         department.getGroups().add(group);             
+    
+        // Save session with updated department and group
         sessionRepository.save(session);
-
- 
-        return session;
+    
+        return new ResponseEntity<>("Group added successfully", HttpStatus.OK);
     }
+    
 
     public ResponseEntity<String> updateGroupInDepartment(String sessionId, String departmentId, String groupId, Group updatedGroupData) {
         Optional<Session> sessionOptional = sessionRepository.findById(sessionId);

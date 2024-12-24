@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 public class Department {
     @Id
     private String departmentId;
+    @Indexed(unique = true)
     private String departmentName;
     private List<Group> groups=new ArrayList<>();
     
