@@ -5,8 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.CrossOrigin;
-
+import java.util.List;
 import java.util.Optional;
 import com.example.backend_timetable.Repository.SessionRepository;
 import com.example.backend_timetable.collection.Department;
@@ -66,22 +65,40 @@ public class DepartmentService {
         return new ResponseEntity<>("Department not found", HttpStatus.NOT_FOUND);
     }
 
-    public ResponseEntity<String> updateDepartmentInSession(String sessionId, String departmentId, Department updatedDepartment) {
-        Optional<Session> sessionOptional = sessionRepository.findById(sessionId);
-        if (!sessionOptional.isPresent()) {
-            return new ResponseEntity<>("Session not found", HttpStatus.NOT_FOUND);
-        }
+   public ResponseEntity<String> updateDepartmentInSession(
+        String sessionId,
+        String departmentId,
+        Department updatedDepartment) {
 
-        Session session = sessionOptional.get();
-        for (Department department : session.getDepartment()) {
-            if (department.getDepartmentId().equals(departmentId)) {
-                department.setDepartmentName(updatedDepartment.getDepartmentName());
-                sessionRepository.save(session);
-                return new ResponseEntity<>("Department updated successfully", HttpStatus.OK);
-            }
-        }
-        return new ResponseEntity<>("Department not found", HttpStatus.NOT_FOUND);
+    Optional<Session> sessionOptional = sessionRepository.findById(sessionId);
+
+    if (sessionOptional.isEmpty()) {
+        return new ResponseEntity<>("Session not found", HttpStatus.NOT_FOUND);
     }
+
+    Session session = sessionOptional.get();
+    List<Department> departments = session.getDepartment();
+
+    for (Department department : departments) {
+        if (department.getDepartmentId().equals(departmentId)) {
+            if (!department.getDepartmentName().equals(updatedDepartment.getDepartmentName())) {
+                boolean isConflict = departments.stream()
+                        .anyMatch(d -> d.getDepartmentName().equals(updatedDepartment.getDepartmentName()));
+
+                if (isConflict) {
+                    return new ResponseEntity<>(
+                            "Cannot update: A department with the same name already exists.",
+                            HttpStatus.CONFLICT);
+                }
+            } 
+            department.setDepartmentName(updatedDepartment.getDepartmentName());
+            sessionRepository.save(session);
+            return new ResponseEntity<>("Department updated successfully", HttpStatus.OK);
+        }
+    }
+
+    return new ResponseEntity<>("Department not found", HttpStatus.NOT_FOUND);
+}
 
 
 

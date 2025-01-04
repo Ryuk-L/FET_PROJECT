@@ -11,4 +11,5 @@ import com.example.backend_timetable.collection.Session;
 @Repository
 public interface SessionRepository extends MongoRepository<Session,String> {
     Optional<Session> findByYearAndUniversityName(String year, String universityName);
+    boolean existsByYearAndUniversityName(String year, String universityName);
 }

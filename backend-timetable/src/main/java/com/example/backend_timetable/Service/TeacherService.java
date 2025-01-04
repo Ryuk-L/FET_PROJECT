@@ -274,14 +274,14 @@ public ResponseEntity<String> deleteTeacherFromSession(String sessionId, String 
 
 
     public ResponseEntity<String> updateTeacherInSession(String sessionId, String teacherId, Teacher updatedTeacherData) {
-        // Step 1: Check if session exists
+       
         Optional<Session> sessionOptional = sessionRepository.findById(sessionId);
         if (!sessionOptional.isPresent()) {
             return new ResponseEntity<>("Session not found", HttpStatus.NOT_FOUND);
         }
         Session session = sessionOptional.get();
     
-        // Step 2: Find the teacher in the session by teacherId
+        
         Optional<Teacher> teacherOptional = session.getTeachers().stream()
                 .filter(teacher -> teacher.getId().equals(teacherId))
                 .findFirst();
@@ -291,14 +291,13 @@ public ResponseEntity<String> deleteTeacherFromSession(String sessionId, String 
         }
         Teacher teacher = teacherOptional.get();
     
-        // Step 3: Update the teacher's details
+        
         teacher.setTeacherName(updatedTeacherData.getTeacherName());
         teacher.setCin(updatedTeacherData.getCin());
         teacher.setEmail(updatedTeacherData.getEmail());
         teacher.setSubjectsCanTeach(updatedTeacherData.getSubjectsCanTeach());
         teacher.setTimeSlots(updatedTeacherData.getTimeSlots());
     
-        // Step 4: Save the updated session
         sessionRepository.save(session);
     
         return new ResponseEntity<>("Teacher updated successfully in session", HttpStatus.OK);

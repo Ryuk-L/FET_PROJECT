@@ -34,6 +34,12 @@ public class SubjectsService {
             return new ResponseEntity<>("Session not found", HttpStatus.NOT_FOUND);
         }
         Session session = sessionOptional.get();
+        boolean subjectExists = session.getSubjects().stream()
+        .anyMatch(existingSubject -> existingSubject.getSubjectName().equals(subjectDTO.getSubjectName()));
+        if (subjectExists) {
+            return new ResponseEntity<>("Subject with the same name already exists in the session", HttpStatus.CONFLICT);
+        }
+
         Subjects subject = new Subjects();
         subject.setId(UUID.randomUUID().toString());
         subject.setSubjectName(subjectDTO.getSubjectName());
@@ -52,6 +58,13 @@ public class SubjectsService {
         }
         
         Session session = sessionOptional.get();
+    boolean subjectExists = session.getSubjects().stream()
+    .anyMatch(existingSubject -> !existingSubject.getId().equals(subjectId) &&
+                               existingSubject.getSubjectName().equals(subjectDTO.getSubjectName()));
+    if (subjectExists) {
+        return new ResponseEntity<>("Subject with the same name already exists in the session", HttpStatus.CONFLICT);
+    }
+
         for (Subjects subject : session.getSubjects()) {
             if (subject.getId().equals(subjectId)) {
                 subject.setSubjectName(subjectDTO.getSubjectName());

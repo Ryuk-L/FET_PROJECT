@@ -23,74 +23,92 @@ public class GroupService {
 
     public ResponseEntity<String> addGroupToDepartmentInSession(String sessionId, String departmentId, Group data) {
 
-        // Check if session exists
         Optional<Session> sessionOptional = sessionRepository.findById(sessionId);
-        if (!sessionOptional.isPresent()) {
-            return new ResponseEntity<>("Session not found", HttpStatus.NOT_FOUND);
+        if (sessionOptional.isEmpty()) {
+            return new ResponseEntity<>("Session with ID " + sessionId + " not found.", HttpStatus.NOT_FOUND);
         }
         Session session = sessionOptional.get();
     
-        // Check if department exists within the session
         Optional<Department> departmentOptional = session.getDepartment().stream()
             .filter(dept -> dept.getDepartmentId().equals(departmentId))
             .findFirst();
-        
-        if (!departmentOptional.isPresent()) {
-            return new ResponseEntity<>("Department not found in this session", HttpStatus.NOT_FOUND);
+    
+        if (departmentOptional.isEmpty()) {
+            return new ResponseEntity<>("Department with ID " + departmentId + " not found in session.", HttpStatus.NOT_FOUND);
         }
         Department department = departmentOptional.get();
     
-        // Check if group name already exists in the department
-        boolean groupExists = department.getGroups().stream()
-            .anyMatch(existingGroup -> existingGroup.getGroupName().equals(data.getGroupName()));
-        
-        if (groupExists) {
-            return new ResponseEntity<>("Group name already exists in this department", HttpStatus.CONFLICT);
+        boolean groupNameExists = session.getDepartment().stream()
+            .flatMap(dept -> dept.getGroups().stream())
+            .anyMatch(existingGroup -> existingGroup.getGroupName().equalsIgnoreCase(data.getGroupName()));
+    
+        if (groupNameExists) {
+            return new ResponseEntity<>("Group with name '" + data.getGroupName() + "' already exists in the session.", HttpStatus.CONFLICT);
         }
     
-        // Create and set group properties
+
         Group group = new Group();
         group.setGroupId(UUID.randomUUID().toString());
-        group.setGroupName(data.getGroupName());     
+        group.setGroupName(data.getGroupName());
         group.setNumberGroups(data.getNumberGroups());
-    
-        // Add group to department
-        department.getGroups().add(group);             
-    
-        // Save session with updated department and group
-        sessionRepository.save(session);
-    
-        return new ResponseEntity<>("Group added successfully", HttpStatus.OK);
-    }
+        group.setProgram(data.getProgram());
+        group.setStudents(data.getStudents());
     
 
+        department.getGroups().add(group);
+
+        sessionRepository.save(session);
+    
+        return new ResponseEntity<>("Group added successfully to the department.", HttpStatus.OK);
+    }
+    
     public ResponseEntity<String> updateGroupInDepartment(String sessionId, String departmentId, String groupId, Group updatedGroupData) {
         Optional<Session> sessionOptional = sessionRepository.findById(sessionId);
         if (!sessionOptional.isPresent()) {
             return new ResponseEntity<>("Session not found", HttpStatus.NOT_FOUND);
         }
         Session session = sessionOptional.get();
+    
         Optional<Department> departmentOptional = session.getDepartment().stream()
             .filter(dept -> dept.getDepartmentId().equals(departmentId))
             .findFirst();
-
+    
         if (!departmentOptional.isPresent()) {
             return new ResponseEntity<>("Department not found", HttpStatus.NOT_FOUND);
         }
         Department department = departmentOptional.get();
+    
         Optional<Group> groupOptional = department.getGroups().stream()
             .filter(grp -> grp.getGroupId().equals(groupId))
             .findFirst();
+    
         if (!groupOptional.isPresent()) {
             return new ResponseEntity<>("Group not found", HttpStatus.NOT_FOUND);
         }
         Group group = groupOptional.get();
-        group.setGroupName(updatedGroupData.getGroupName());
-        group.setNumberGroups(updatedGroupData.getNumberGroups());;
-        sessionRepository.save(session);
+    
+    for (Department dept : session.getDepartment()) {
+        for (Group existingGroup : dept.getGroups()) {
+            String existingGroupName = existingGroup.getGroupName().trim();
+            String updatedGroupName = updatedGroupData.getGroupName().trim();
+            if (existingGroupName.equals(updatedGroupName) &&
+                !existingGroup.getGroupId().equals(groupId)) {
+                return new ResponseEntity<>("Group with name '" + updatedGroupName + "' already exists in another department.", HttpStatus.CONFLICT);
+            }
+        }
+    }
 
+        group.setGroupName(updatedGroupData.getGroupName());
+        group.setNumberGroups(updatedGroupData.getNumberGroups());
+    
+        sessionRepository.save(session);
+    
         return new ResponseEntity<>("Group updated successfully", HttpStatus.OK);
     }
+    
+    
+    
+    
 
     public ResponseEntity<?> getAllGroupsInDepartment(String sessionId, String departmentId) {
         Optional<Session> sessionOptional = sessionRepository.findById(sessionId);
@@ -110,7 +128,6 @@ public class GroupService {
         Department department = departmentOptional.get();
         return new ResponseEntity<>(department.getGroups(), HttpStatus.OK);
     }
-
 
     public ResponseEntity<?> getGroupById(String sessionId, String departmentId, String groupId) {
         Optional<Session> sessionOptional = sessionRepository.findById(sessionId);

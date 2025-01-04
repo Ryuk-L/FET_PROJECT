@@ -25,13 +25,15 @@ public class ProgramService {
             return new ResponseEntity<>("Session not found", HttpStatus.NOT_FOUND);
         }
         Session session = sessionOptional.get();
+    
         Optional<Department> departmentOptional = session.getDepartment().stream()
             .filter(dept -> dept.getDepartmentId().equals(departmentId))
             .findFirst();
         if (!departmentOptional.isPresent()) {
-            return new ResponseEntity<>("Department not found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Department not found", HttpStatus.NOT_FOUND); 
         }
         Department department = departmentOptional.get();
+    
         Optional<Group> groupOptional = department.getGroups().stream()
             .filter(group -> group.getGroupId().equals(groupId))
             .findFirst();
@@ -39,10 +41,15 @@ public class ProgramService {
             return new ResponseEntity<>("Group not found", HttpStatus.NOT_FOUND);
         }
         Group group = groupOptional.get();
+    
+
+    
+        // Set or update the program
         group.setProgram(programData);
         sessionRepository.save(session);
+    
         return new ResponseEntity<>("Program with subjects added or updated successfully", HttpStatus.OK);
-    }
+    }    
 
 
     public ResponseEntity<String> deleteProgramFromGroup(String sessionId, String departmentId, String groupId) {

@@ -17,27 +17,40 @@ import java.util.UUID;
 
 @Service
 public class RoomService {
-    @Autowired
-    private RoomRepository roomRepository;
+
     @Autowired
     private SessionRepository sessionRepository;
 
     public ResponseEntity<String> addRoomToSession(String sessionId, RoomDTO roomDTO) {
+        // Fetch the session by ID
         Optional<Session> sessionOptional = sessionRepository.findById(sessionId);
         if (!sessionOptional.isPresent()) {
             return new ResponseEntity<>("Session not found", HttpStatus.NOT_FOUND);
         }
-
         Session session = sessionOptional.get();
+
+      
+    
+        // Check for duplicate room name within the session
+        boolean roomExists = session.getRooms().stream()
+        .anyMatch(existingRoom -> existingRoom.getNameRoom().equals(roomDTO.getNameRoom()));
+        if (roomExists) {
+            return new ResponseEntity<>("Room with the same name already exists in the session", HttpStatus.CONFLICT);
+        }
+    
+        // Create and add the new room
         Room room = new Room();
+        room.setRoomId(UUID.randomUUID().toString());
         room.setNameRoom(roomDTO.getNameRoom());
         room.setCapacity(roomDTO.getCapacity());
         room.setType(roomDTO.getType());
-        room.setRoomId(UUID.randomUUID().toString());
+    
         session.getRooms().add(room);
         sessionRepository.save(session);
-        return new ResponseEntity<>("Room added to session", HttpStatus.OK);
+    
+        return new ResponseEntity<>("Room added to session successfully", HttpStatus.OK);
     }
+    
 
     public List<Room> getRoomsBySessionId(String sessionId) {
         Optional<Session> optionalSession = sessionRepository.findById(sessionId);
@@ -86,6 +99,12 @@ public class RoomService {
         }
 
         Session session = sessionOptional.get();
+        boolean roomExists = session.getRooms().stream()
+        .anyMatch(existingRoom -> !existingRoom.getRoomId().equals(roomId) &&
+                                   existingRoom.getNameRoom().equals(roomDTO.getNameRoom()));
+    if (roomExists) {
+        return new ResponseEntity<>("Room with the same name already exists in the session", HttpStatus.CONFLICT);
+    }
         for (Room room : session.getRooms()) {
             if (room.getRoomId().equals(roomId)) {
                 room.setNameRoom(roomDTO.getNameRoom());

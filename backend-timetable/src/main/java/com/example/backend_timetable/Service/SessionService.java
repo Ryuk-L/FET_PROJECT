@@ -138,26 +138,44 @@ public class SessionService {
 
     
     public ResponseEntity<String> updateSession(
-        @PathVariable String sessionId, 
+        @PathVariable String sessionId,
         @RequestBody SessionRequest request) {
 
     Optional<Session> optionalSession = sessionRepository.findById(sessionId);
     if (optionalSession.isPresent()) {
-        Session session = optionalSession.get();
-        session.setYear(request.getYear());
-        session.setUniversityName(request.getUniversityName());
-        session.setTimeBreakStart(request.getTimeBreakStart());
-        session.setTimeBreakEnd(request.getTimeBreakEnd());
-        session.setTimeDayStart(request.getTimeDayStart());
-        session.setTimeDayEnd(request.getTimeDayEnd());
-        session.setActiveDays(request.getActiveDays());
+        Session existingSession = optionalSession.get();
 
-        sessionRepository.save(session); 
+        boolean isUniversityNameOrYearChanged = 
+            !existingSession.getUniversityName().equals(request.getUniversityName()) ||
+            !existingSession.getYear().equals(request.getYear());
+
+        if (isUniversityNameOrYearChanged) {
+            boolean isConflict = sessionRepository.existsByYearAndUniversityName(
+                    request.getYear(),
+                    request.getUniversityName());
+
+            if (isConflict) {
+                return new ResponseEntity<>(
+                        "Cannot update: A session with the same university name and year already exists.",
+                        HttpStatus.CONFLICT);
+            }
+        }
+
+        existingSession.setYear(request.getYear());
+        existingSession.setUniversityName(request.getUniversityName());
+        existingSession.setTimeBreakStart(request.getTimeBreakStart());
+        existingSession.setTimeBreakEnd(request.getTimeBreakEnd());
+        existingSession.setTimeDayStart(request.getTimeDayStart());
+        existingSession.setTimeDayEnd(request.getTimeDayEnd());
+        existingSession.setActiveDays(request.getActiveDays());
+
+        sessionRepository.save(existingSession);
         return new ResponseEntity<>("Session updated successfully.", HttpStatus.OK);
     } else {
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }
+
 
 
 
