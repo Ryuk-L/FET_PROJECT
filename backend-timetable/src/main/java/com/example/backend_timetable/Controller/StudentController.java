@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/admin/session/{sessionId}/departments/{departmentId}/groups/{groupId}/students")
 public class StudentController {
 
