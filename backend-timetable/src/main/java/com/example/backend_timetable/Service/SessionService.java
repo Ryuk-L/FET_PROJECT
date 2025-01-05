@@ -17,6 +17,7 @@ import com.example.backend_timetable.DTO.SessionDTO;
 import com.example.backend_timetable.DTO.SessionRequest;
 import com.example.backend_timetable.DTO.UniversityNameRequest;
 import com.example.backend_timetable.Repository.SessionRepository;
+import com.example.backend_timetable.collection.Department;
 import com.example.backend_timetable.collection.Room;
 import com.example.backend_timetable.collection.Session;
 
@@ -193,20 +194,79 @@ public ResponseEntity<String> updateActiveDays(
         return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
     }
 
-
-    
-
-
    
 }
 
 
+public long getDepartmentCount(String sessionId) {
+    Optional<Session> sessionOptional = sessionRepository.findById(sessionId);
+    return sessionOptional.map(session -> (long) session.getDepartment().size()).orElse(0L);
+}
+
+
+public long getRoomCount(String sessionId) {
+    Optional<Session> sessionOptional = sessionRepository.findById(sessionId);
+    return sessionOptional.map(session -> (long) session.getSubjects().size()).orElse(0L);
+}
+
+
+public long getLectureSubjectCount(String sessionId) {
+    Optional<Session> sessionOptional = sessionRepository.findById(sessionId);
+    return sessionOptional.map(session -> 
+            session.getSubjects().stream()
+                   .filter(subject -> "lecture".equalsIgnoreCase(subject.getType())) // Filter for type 'lecture'
+                   .count()
+    ).orElse(0L); // Default to 0 if the session is not found
+}
+
+public long getTeacherCount(String sessionId) {
+    Optional<Session> sessionOptional = sessionRepository.findById(sessionId);
+    return sessionOptional.map(session -> (long) session.getTeachers().size()).orElse(0L);
+}
+
+
+public long getGroupCount(String sessionId) {
+  
+    Optional<Session> sessionOptional = sessionRepository.findById(sessionId);
+
+    if (sessionOptional.isPresent()) {
+        Session session = sessionOptional.get();
+        return session.getDepartment().stream()
+                .flatMap(department -> department.getGroups().stream()) 
+                .count(); 
+    } else {
+      
+        return 0L;
+    }
+}
+
+
+public long getStudentCount(String sessionId) {
+    Optional<Session> sessionOptional = sessionRepository.findById(sessionId);
+
+    if (sessionOptional.isPresent()) {
+        Session session = sessionOptional.get();
+
+        return session.getDepartment().stream()
+                .flatMap(department -> department.getGroups().stream()) 
+                .flatMap(group -> group.getStudents().stream())        
+                .count();                                             
+    } else {
+        return 0L;
+    }
+}
+
+
+public long getLabSubjectCount(String sessionId) {
+    Optional<Session> sessionOptional = sessionRepository.findById(sessionId);
+    return sessionOptional.map(session -> 
+            session.getSubjects().stream()
+                   .filter(subject -> "lab".equalsIgnoreCase(subject.getType())) 
+                   .count()
+    ).orElse(0L);
+}
+
     
-
-
-
-
-
 
     
 }

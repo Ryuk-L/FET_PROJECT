@@ -46,5 +46,8 @@ public class DepartmentController {
         return departmentService.deleteDepartmentFromSession(sessionId, departmentId);
     }
 
+
+    
+
   
 }

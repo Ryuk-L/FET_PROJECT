@@ -9,7 +9,8 @@ import com.example.backend_timetable.DTO.UniversityNameRequest;
 import com.example.backend_timetable.Repository.SessionRepository;
 import com.example.backend_timetable.Service.SessionService;
 import com.example.backend_timetable.collection.Session;
-
+import org.springframework.http.HttpStatus;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.ResponseEntity;
@@ -75,5 +76,50 @@ public class SessionController {
 
 
 
+  @GetMapping("/{sessionId}/department-count")
+    public ResponseEntity<Long> getDepartmentCount(@PathVariable String sessionId) {
+   
+        long departmentCount = sessionService.getDepartmentCount(sessionId);
+        return ResponseEntity.ok(departmentCount); 
+    }
+
+    @GetMapping("/{sessionId}/room-count")
+    public ResponseEntity<Long> getRoomCount(@PathVariable String sessionId) {
+  
+        long RoomCount = sessionService.getRoomCount(sessionId);
+        return ResponseEntity.ok(RoomCount); 
+    }
+
+    @GetMapping("/{sessionId}/subject-lecture-count")
+    public ResponseEntity<Long> getLectureSubjectCount(@PathVariable String sessionId) {
+        long SubjectCount = sessionService.getLectureSubjectCount(sessionId);
+        return ResponseEntity.ok(SubjectCount); 
+    }
+
+    @GetMapping("/{sessionId}/subject-lab-count")
+    public ResponseEntity<Long> getLabSubjectCount(@PathVariable String sessionId) {
+        long SubjectCount = sessionService.getLabSubjectCount(sessionId);
+        return ResponseEntity.ok(SubjectCount); 
+    }
+
+    @GetMapping("/{sessionId}/teacher-count")
+    public ResponseEntity<Long> getTeacherCount(@PathVariable String sessionId) {
+        long TeacherCount = sessionService.getTeacherCount(sessionId);
+        return ResponseEntity.ok(TeacherCount); 
+    }
+
+
+    @GetMapping("/{sessionId}/group-count")
+    public ResponseEntity<Long> getGroupCount(@PathVariable String sessionId) {
+        long GroupCount = sessionService.getGroupCount(sessionId);
+        return ResponseEntity.ok(GroupCount); 
+    }
+
+
+    @GetMapping("/{sessionId}/student-count")
+    public ResponseEntity<Long> getStudnetCount(@PathVariable String sessionId) {
+        long StudnetCount = sessionService.getStudentCount(sessionId);
+        return ResponseEntity.ok(StudnetCount); 
+    }
 
 }
