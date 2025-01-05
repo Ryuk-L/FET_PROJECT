@@ -86,7 +86,6 @@ public class GroupService {
             return new ResponseEntity<>("Group not found", HttpStatus.NOT_FOUND);
         }
         Group group = groupOptional.get();
-    
     for (Department dept : session.getDepartment()) {
         for (Group existingGroup : dept.getGroups()) {
             String existingGroupName = existingGroup.getGroupName().trim();

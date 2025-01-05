@@ -42,14 +42,37 @@ public class StudentService {
 
     public ResponseEntity<String> addStudentToGroup(String sessionId, String departmentId, String groupId,
             Student data) {
+
         try {
             Session session = findSessionById(sessionId);
-            Department department = findDepartmentById(session, departmentId);
-            Group group = findGroupById(department, groupId);
-
-            if (studentRepository.existsByName(data.getName())) {
-                return ResponseEntity.status(400).body("Student with this name already exists");
+            if (session == null) {
+                return new ResponseEntity<>("Session not found with id: " + sessionId, HttpStatus.NOT_FOUND);
             }
+            Department department = findDepartmentById(session, departmentId);
+            if (department == null) {
+                return new ResponseEntity<>("Department not found with id: " + departmentId, HttpStatus.NOT_FOUND);
+            }
+
+            Group group = findGroupById(department, groupId);
+            if (group == null) {
+                return new ResponseEntity<>("Group not found with id: " + groupId, HttpStatus.NOT_FOUND);
+            }
+ 
+
+            for (Department dept : session.getDepartment()) {
+                for (Group existingGroup : dept.getGroups()) {
+                    for(Student existingStudent : existingGroup.getStudents()) {
+                        if (existingStudent.getName().equals(data.getName()) ||
+                        existingStudent.getCin().equals(data.getCin()) ||
+                        existingStudent.getEmail().equals(data.getEmail())) {
+                            return new ResponseEntity<>(" Student with the same Email or CIN or Name already exists in another group.", HttpStatus.CONFLICT);
+                        }
+                    }
+                }
+            }
+
+    
+            
 
             AuthRequest userFirebase = new AuthRequest();
             userFirebase.setEmail(data.getEmail());
@@ -89,6 +112,21 @@ public class StudentService {
         Session session = findSessionById(sessionId);
         Department department = findDepartmentById(session, departmentId);
         Group group = findGroupById(department, groupId);
+
+        for (Department dept : session.getDepartment()) {
+            for (Group existingGroup : dept.getGroups()) {
+                for (Student existingStudent : existingGroup.getStudents()) {
+                    // Check if the student name, CIN or email already exists in another group
+                    if ((existingStudent.getName().equals(updatedStudent.getName()) ||
+                         existingStudent.getCin().equals(updatedStudent.getCin())) &&
+                         !existingStudent.getId().equals(studentId)) {
+                        return new ResponseEntity<>("Student with the same Email, CIN, or Name already exists in another group.", HttpStatus.CONFLICT);
+                    }
+                }
+            }
+        }
+        
+        
 
         group.getStudents().stream()
                 .filter(student -> student.getId().equals(studentId))

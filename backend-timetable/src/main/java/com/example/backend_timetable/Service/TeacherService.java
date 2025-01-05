@@ -19,10 +19,6 @@ import com.example.backend_timetable.collection.TimeSlotTeacher;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Iterator;
-import java.util.UUID;
-
-import javax.security.auth.Subject;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -45,7 +41,21 @@ public class TeacherService {
         if (!sessionOptional.isPresent()) {
             return new ResponseEntity<>("Session not found", HttpStatus.NOT_FOUND);
         }
-    
+        
+        Session session = sessionOptional.get();
+        boolean teacherExists = session.getTeachers().stream()
+                .anyMatch(existingTeacher -> 
+                    existingTeacher.getCin().equals(data.getCin()) || 
+                    existingTeacher.getTeacherName().equals(data.getTeacherName()) ||
+                    existingTeacher.getEmail().equals(data.getEmail())
+                );
+        
+        if (teacherExists) {
+            return new ResponseEntity<>("Teacher with the same email or CIN or Name already exists in the session", HttpStatus.CONFLICT);
+        }
+        
+
+       
         AuthRequest userFirebase = new AuthRequest();
         userFirebase.setEmail(data.getEmail());
         userFirebase.setPassword(data.getCin());
@@ -73,7 +83,7 @@ public class TeacherService {
         roleService.addRole(roleUser);
     
        
-        Session session = sessionOptional.get();
+        // Session session = sessionOptional.get();
         session.getTeachers().add(teacher);
         sessionRepository.save(session);
     
@@ -280,6 +290,19 @@ public ResponseEntity<String> deleteTeacherFromSession(String sessionId, String 
             return new ResponseEntity<>("Session not found", HttpStatus.NOT_FOUND);
         }
         Session session = sessionOptional.get();
+    
+        boolean teacherExists = session.getTeachers().stream()
+        .anyMatch(existingTeacher -> 
+            (existingTeacher.getCin().equals(updatedTeacherData.getCin()) || 
+             existingTeacher.getTeacherName().equals(updatedTeacherData.getTeacherName()) || 
+             existingTeacher.getEmail().equals(updatedTeacherData.getEmail())) &&
+            !existingTeacher.getId().equals(teacherId)
+        );
+        
+        if (teacherExists) {
+            return new ResponseEntity<>("Teacher with the same email, CIN, or Name already exists in the session", HttpStatus.CONFLICT);
+        }
+
     
         
         Optional<Teacher> teacherOptional = session.getTeachers().stream()
