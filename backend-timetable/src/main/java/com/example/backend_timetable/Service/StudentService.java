@@ -99,6 +99,7 @@ public class StudentService {
             Role roleUser = new Role();
             roleUser.setIdUser(firebaseUid);
             roleUser.setRoleUser("Student");
+            roleUser.getSessionList().add(sessionId);
             roleService.addRole(roleUser);
 
             return new ResponseEntity<>("Student added to group successfully", HttpStatus.OK);

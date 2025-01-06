@@ -80,7 +80,9 @@ public class TeacherService {
         Role roleUser = new Role();
         roleUser.setIdUser(firebaseUid);
         roleUser.setRoleUser("Teacher");
+        roleUser.getSessionList().add(sessionId);
         roleService.addRole(roleUser);
+
     
        
         // Session session = sessionOptional.get();
