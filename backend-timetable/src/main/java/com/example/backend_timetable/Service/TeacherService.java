@@ -196,6 +196,7 @@ public ResponseEntity<String> deleteTeacherFromSession(String sessionId, String 
                 Role roleUser = new Role();
                 roleUser.setIdUser(authResponse.getUid());
                 roleUser.setRoleUser("Teacher");
+                roleUser.getSessionList().add(sessionId);
                 roleService.addRole(roleUser);
     
                

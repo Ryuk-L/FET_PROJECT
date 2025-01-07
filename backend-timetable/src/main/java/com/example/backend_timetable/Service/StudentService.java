@@ -244,6 +244,7 @@ public class StudentService {
                 Role roleUser = new Role();
                 roleUser.setIdUser(authResponse.getUid());
                 roleUser.setRoleUser("Student");
+                roleUser.getSessionList().add(sessionId);
                 roleService.addRole(roleUser);
 
             } catch (Exception e) {
