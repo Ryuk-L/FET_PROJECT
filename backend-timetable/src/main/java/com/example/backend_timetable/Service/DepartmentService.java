@@ -18,6 +18,8 @@ public class DepartmentService {
 
     @Autowired
     private SessionRepository sessionRepository;
+    @Autowired
+    private GroupService groupService;
 
     public ResponseEntity<String> addDepartmentToSession(String sessionId, Department department) {
         Optional<Session> sessionOptional = sessionRepository.findById(sessionId);
@@ -108,7 +110,13 @@ public class DepartmentService {
             return new ResponseEntity<>("Session not found", HttpStatus.NOT_FOUND);
         }
         Session session = sessionOptional.get();
-        boolean isRemoved = session.getDepartment().removeIf(department -> department.getDepartmentId().equals(departmentId));
+        boolean isRemoved = session.getDepartment().removeIf(department ->{
+            if( department.getDepartmentId().equals(departmentId)){
+                department.getGroups().forEach(group->groupService.deleteGroupFromDepartment(sessionId, departmentId, departmentId) );
+                return true;
+            }
+            return false;
+        });
         if (!isRemoved) {
             return new ResponseEntity<>("Department not found", HttpStatus.NOT_FOUND);
         }

@@ -5,6 +5,7 @@ import com.example.backend_timetable.Repository.RoomRepository;
 import com.example.backend_timetable.Repository.SessionRepository;
 import com.example.backend_timetable.collection.Room;
 import com.example.backend_timetable.collection.Session;
+import com.example.backend_timetable.collection.Student;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

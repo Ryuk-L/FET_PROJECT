@@ -70,10 +70,6 @@ public class StudentService {
                     }
                 }
             }
-
-    
-            
-
             AuthRequest userFirebase = new AuthRequest();
             userFirebase.setEmail(data.getEmail());
             userFirebase.setPassword(data.getCin());
@@ -116,8 +112,7 @@ public class StudentService {
 
         for (Department dept : session.getDepartment()) {
             for (Group existingGroup : dept.getGroups()) {
-                for (Student existingStudent : existingGroup.getStudents()) {
-                    // Check if the student name, CIN or email already exists in another group
+                for (Student existingStudent : existingGroup.getStudents()) { 
                     if ((existingStudent.getName().equals(updatedStudent.getName()) ||
                          existingStudent.getCin().equals(updatedStudent.getCin())) &&
                          !existingStudent.getId().equals(studentId)) {
@@ -126,9 +121,6 @@ public class StudentService {
                 }
             }
         }
-        
-        
-
         group.getStudents().stream()
                 .filter(student -> student.getId().equals(studentId))
                 .findFirst()

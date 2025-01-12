@@ -216,7 +216,7 @@ public long getLectureSubjectCount(String sessionId) {
             session.getSubjects().stream()
                    .filter(subject -> "lecture".equalsIgnoreCase(subject.getType())) // Filter for type 'lecture'
                    .count()
-    ).orElse(0L); // Default to 0 if the session is not found
+    ).orElse(0L); 
 }
 
 public long getTeacherCount(String sessionId) {

@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.example.backend_timetable.Repository.SessionRepository;
@@ -20,6 +21,9 @@ public class GroupService {
    
     @Autowired
     private SessionRepository sessionRepository;
+
+    @Autowired
+    private StudentService studentService;
 
     public ResponseEntity<String> addGroupToDepartmentInSession(String sessionId, String departmentId, Group data) {
 
@@ -168,7 +172,15 @@ public class GroupService {
             return new ResponseEntity<>("Department not found", HttpStatus.NOT_FOUND);
         }
         Department department = departmentOptional.get();
-        boolean removed = department.getGroups().removeIf(grp -> grp.getGroupId().equals(groupId));
+       
+        boolean removed = department.getGroups().removeIf(grp -> {
+            if (grp.getGroupId().equals(groupId)) {
+                grp.getStudents().forEach(student -> studentService.deleteStudent(sessionId,departmentId,groupId,student.getId()));
+                return true; 
+            }
+            return false; 
+        });
+        
 
         if (!removed) {
             return new ResponseEntity<>("Group not found", HttpStatus.NOT_FOUND);
